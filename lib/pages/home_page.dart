@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:podcast/bloc/podcast_bloc.dart';
+import 'package:podcast/models/podcast_model.dart';
+
 import 'package:podcast/shared/theme.dart';
-import 'package:podcast/widgets/button_custom.dart';
 import 'package:podcast/widgets/card_podcast.dart';
+import 'package:podcast/widgets/header.dart';
 import 'package:podcast/widgets/podcast_tile.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,6 +16,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final PodcastBloc _newsBloc = PodcastBloc();
+  @override
+  void initState() {
+    _newsBloc.add(GetPodcastList());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,10 +30,11 @@ class _HomePageState extends State<HomePage> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
-                expandedHeight: 200,
+                expandedHeight: 230,
                 floating: true,
                 elevation: 0,
                 forceElevated: true,
+                pinned: true,
                 stretch: true,
                 title: const Text(
                   "Qara'a",
@@ -37,10 +49,10 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 backgroundColor: Colors.white,
-                flexibleSpace: FlexibleSpaceBar(
+                flexibleSpace: const FlexibleSpaceBar(
                   centerTitle: true,
                   expandedTitleScale: 1.5,
-                  background: infoApp(),
+                  background: HeaderApp(),
                   collapseMode: CollapseMode.parallax,
                 ))
           ];
@@ -50,155 +62,111 @@ class _HomePageState extends State<HomePage> {
             notification.disallowIndicator();
             return true;
           },
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 20, bottom: 12, top: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Terbaru',
-                        style: blackTextStyle.copyWith(
-                            fontSize: 16, fontWeight: semiBold),
-                      )
-                    ],
-                  ),
-                ),
-
-                podcastNew(),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  margin: const EdgeInsets.only(top: 24, bottom: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Semua episode',
-                        style: blackTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: semiBold,
-                        ),
+          child: BlocProvider(
+            create: (context) => _newsBloc,
+            child: BlocListener<PodcastBloc, PodcastState>(
+              listener: (context, state) {
+                if (state is PodcastError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message!),
+                    ),
+                  );
+                }
+              },
+              child: BlocBuilder<PodcastBloc, PodcastState>(
+                builder: (context, state) {
+                  if (state is PodcastInitial) {
+                    return _buildLoading();
+                  } else if (state is PodcasLoading) {
+                    return _buildLoading();
+                  } else if (state is PodcastSuccess) {
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          terbaruText(),
+                          buildCard(context, state.podcastModel),
+                          semuaEpisodeText(),
+                          buildTile(context, state.podcastModel)
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                // categoryList(),
-                podcastTile()
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+                    );
+                  } else if (state is PodcastError) {}
 
-  Widget infoApp() {
-    return Container(
-      padding: const EdgeInsets.only(top: 55),
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-        fit: BoxFit.cover,
-        image: AssetImage(
-          'assets/gradient.png',
-        ),
-      )),
-      margin: const EdgeInsets.only(top: 20),
-      child: Center(
-        child: Column(
-          children: [
-            Container(
-              width: 75,
-              height: 75,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/Logo.png'),
-                ),
+                  return Center(
+                    child: _buildLoading(),
+                  );
+                },
               ),
             ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Kumpulan dakwah islami yang siap menemani hari mu. Update setiap 2 kali sepekan. Stay Tune!',
-                style: blackTextStyle.copyWith(fontSize: 13),
-                textAlign: TextAlign.center,
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget podcastNew() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Container(
-        padding: const EdgeInsets.only(left: 18, right: 18),
-        child: Row(
-          children: const [
-            CardPodcast(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget categoryList() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: const [
-          ButtonCustom(category: 'kajian islam'),
-          ButtonCustom(category: 'ramadan series'),
-          ButtonCustom(category: 'kajian islam'),
-          ButtonCustom(category: 'kajian islam')
-        ],
-      ),
-    );
-  }
-
-  Widget podcastTile() {
+  Widget buildCard(BuildContext context, List<PodcastModel> model) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: const [
-          PodcastTile(
-            title: 'sada',
-            category: 'asdasd',
-            imagePath: 'assets/img1.png',
-            date: '20 mei',
-          ),
-          PodcastTile(
-            title: 'sada',
-            category: 'asdasd',
-            imagePath: 'assets/img1.png',
-            date: '20 mei',
-          ),
-          PodcastTile(
-            title: 'sada',
-            category: 'asdasd',
-            imagePath: 'assets/img1.png',
-            date: '20 mei',
-          ),
-          PodcastTile(
-            title: 'sada',
-            category: 'asdasd',
-            imagePath: 'assets/img1.png',
-            date: '20 mei',
-          ),
-          PodcastTile(
-            title: 'sada',
-            category: 'asdasd',
-            imagePath: 'assets/img1.png',
-            date: '20 mei',
-          ),
-        ],
+      height: 230,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 10,
+      ),
+      width: double.infinity,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: model.length,
+        itemBuilder: (BuildContext context, int index) {
+          return PodcastCard(model[index]);
+        },
       ),
     );
   }
+}
+
+Widget terbaruText() {
+  return Container(
+    margin: const EdgeInsets.only(left: 20, bottom: 12, top: 20),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Terbaru',
+          style: blackTextStyle.copyWith(fontSize: 16, fontWeight: semiBold),
+        )
+      ],
+    ),
+  );
+}
+
+Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+
+Widget semuaEpisodeText() {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 12),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+          'Semua episode',
+          style: blackTextStyle.copyWith(
+            fontSize: 16,
+            fontWeight: semiBold,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget buildTile(BuildContext context, List<PodcastModel> podcast) {
+  return ListView.builder(
+    padding: EdgeInsets.zero,
+    shrinkWrap: true,
+    scrollDirection: Axis.vertical,
+    itemCount: podcast.length,
+    itemBuilder: (BuildContext context, int index) {
+      return PodcastTile(podcast[index]);
+    },
+  );
 }

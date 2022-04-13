@@ -36,8 +36,12 @@ dependencies:
   google_fonts: ^2.3.1
   http: ^0.13.4
   getwidget: ^ 2.0.4
-  new_gradient_app_bar: ^0.2.0
-  scroll_app_bar: ^2.0.0
+  flutter_bloc: ^8.0.1
+  dio: ^4.0.4
+  equatable: ^2.0.3
+  provider: ^6.0.2
+  audioplayers: ^0.20.1
+  audio_service: ^0.18.4
 
 dev_dependencies:
   flutter_test:

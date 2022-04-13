@@ -1,78 +1,79 @@
 import 'package:flutter/material.dart';
-import 'package:podcast/shared/theme.dart';
+import 'package:podcast/models/podcast_model.dart';
+
+import '../shared/theme.dart';
 
 class PodcastTile extends StatelessWidget {
-  final String title;
-  final String imagePath;
-  final String category;
-  final String date;
+  final PodcastModel _podcastModel;
 
   const PodcastTile(
-      {Key? key,
-      required this.title,
-      required this.imagePath,
-      required this.category,
-      required this.date})
-      : super(key: key);
+    this._podcastModel, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/detail-podcast');
-      },
-      child: Container(
-        height: 90,
-        width: double.infinity,
-        margin: const EdgeInsets.only(top: 12, right: 20, bottom: 6),
-        padding: const EdgeInsets.only(left: 6, top: 8, bottom: 8),
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300, width: 2),
-            borderRadius: BorderRadius.circular(10)),
-        child: Row(
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                    imagePath,
-                  ),
+      // onTap: () {
+      //   Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //           builder: (context) => DetailPodcast(_podcastModel)));
+      // },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          height: 100,
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300, width: 2),
+              borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            children: [
+              Container(
+                height: 62,
+                width: 62,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                      image: NetworkImage(_podcastModel.imageUrl),
+                      fit: BoxFit.cover),
                 ),
               ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    title,
-                    style: blackTextStyle.copyWith(
-                      fontSize: 12,
-                      fontWeight: semiBold,
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                margin: const EdgeInsets.only(left: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _podcastModel.title,
+                      style: blackTextStyle.copyWith(
+                        fontSize: 12,
+                        fontWeight: semiBold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    category,
-                    style: greyTextStyle.copyWith(
-                      fontSize: 10,
-                      fontWeight: light,
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  Text(
-                    date,
-                    style:
-                        greyTextStyle.copyWith(fontSize: 8, fontWeight: light),
-                  )
-                ],
+                    Text(
+                      _podcastModel.category,
+                      style: greyTextStyle.copyWith(
+                        fontSize: 10,
+                        fontWeight: light,
+                      ),
+                    ),
+                    Text(
+                      _podcastModel.createdAt,
+                      style: greyTextStyle.copyWith(
+                          fontSize: 8, fontWeight: light),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
