@@ -114,6 +114,7 @@ class _HomePageState extends State<HomePage> {
       ),
       width: double.infinity,
       child: ListView.builder(
+        reverse: true,
         scrollDirection: Axis.horizontal,
         itemCount: model.length,
         itemBuilder: (BuildContext context, int index) {
@@ -160,13 +161,15 @@ Widget semuaEpisodeText() {
 }
 
 Widget buildTile(BuildContext context, List<PodcastModel> podcast) {
-  return ListView.builder(
-    padding: EdgeInsets.zero,
-    shrinkWrap: true,
-    scrollDirection: Axis.vertical,
-    itemCount: podcast.length,
-    itemBuilder: (BuildContext context, int index) {
-      return PodcastTile(podcast[index]);
-    },
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12),
+    child: ListView.builder(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      itemCount: podcast.length,
+      itemBuilder: (BuildContext context, int index) {
+        return PodcastTile(podcast[index]);
+      },
+    ),
   );
 }

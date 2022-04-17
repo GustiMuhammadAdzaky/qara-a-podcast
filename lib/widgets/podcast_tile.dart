@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:podcast/models/podcast_model.dart';
+import 'package:podcast/pages/detail_podcast_page.dart';
 
 import '../shared/theme.dart';
 
@@ -14,12 +15,12 @@ class PodcastTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // onTap: () {
-      //   Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //           builder: (context) => DetailPodcast(_podcastModel)));
-      // },
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailPodcast(_podcastModel)));
+      },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(

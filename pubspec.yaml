@@ -41,7 +41,10 @@ dependencies:
   equatable: ^2.0.3
   provider: ^6.0.2
   audioplayers: ^0.20.1
-  audio_service: ^0.18.4
+  audio_service: ^0.17.1
+  glassmorphism: ^3.0.0
+  sleek_circular_slider: ^2.0.1
+  flutter_round_slider: ^1.0.0
 
 dev_dependencies:
   flutter_test:

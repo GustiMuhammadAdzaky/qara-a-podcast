@@ -1,7 +1,10 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:podcast/models/podcast_model.dart';
-import 'package:podcast/pages/detail_podcast_page.dart';
 import 'package:podcast/shared/theme.dart';
+
+import 'mini_player.dart';
 
 class PodcastCard extends StatefulWidget {
   final PodcastModel _podcastModel;
@@ -16,14 +19,48 @@ class PodcastCard extends StatefulWidget {
 }
 
 class _PodcastCardState extends State<PodcastCard> {
+  AudioPlayer audioPlayer = AudioPlayer();
+
+  IconData playBtn = Icons.play_arrow;
+  bool playing = false;
+  Duration duration = const Duration();
+  Duration position = const Duration();
+
+  void getAudio(String url) async {
+    if (playing) {
+      var res = await audioPlayer.pause();
+      if (res == 1) {
+        setState(() {
+          playBtn = playBtn = Icons.play_arrow;
+          playing = false;
+        });
+      }
+    } else {
+      var res = await audioPlayer.play(url);
+      if (res == 1) {
+        setState(() {
+          playBtn = Icons.pause;
+          playing = true;
+        });
+      }
+    }
+    audioPlayer.onDurationChanged.listen((Duration dd) {
+      setState(() {
+        duration = dd;
+      });
+      audioPlayer.onAudioPositionChanged.listen((Duration dd) {
+        setState(() {
+          position = dd;
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DetailPodcast(widget._podcastModel)));
+        _Miniplayer(context, widget._podcastModel);
       },
       child: Container(
         height: 200,
@@ -70,5 +107,41 @@ class _PodcastCardState extends State<PodcastCard> {
         ),
       ),
     );
+  }
+
+  void _Miniplayer(context, PodcastModel podcastModel) {
+    showBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (BuildContext context) {
+          return GlassmorphicContainer(
+            height: 100,
+            width: double.infinity,
+            borderRadius: 20,
+            blur: 6,
+            alignment: Alignment.bottomCenter,
+            border: 4,
+            linearGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  const Color(0xFFFFFFFF).withOpacity(0.10),
+                  const Color(0xFFFFFFFF).withOpacity(0.2),
+                ],
+                stops: const [
+                  0.1,
+                  1,
+                ]),
+            borderGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.topRight,
+              colors: [
+                const Color(0xFFffffff).withOpacity(0.10),
+                const Color((0xFFFFFFFF)).withOpacity(0.4),
+              ],
+            ),
+            child: MiniPlayer(podcastModel),
+          );
+        });
   }
 }

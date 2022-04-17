@@ -12,11 +12,17 @@ class DetailPodcast extends StatefulWidget {
 }
 
 class _DetailPodcastState extends State<DetailPodcast> {
-  AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
+  AudioPlayer audioPlayer = AudioPlayer();
+
   IconData playBtn = Icons.play_arrow;
   bool playing = false;
   Duration duration = const Duration();
   Duration position = const Duration();
+
+  get durationText =>
+      duration != null ? duration.toString().split('.').first : '';
+  get positionText =>
+      position != null ? position.toString().split('.').first : '';
 
   void getAudio(String url) async {
     if (playing) {
@@ -60,8 +66,10 @@ class _DetailPodcastState extends State<DetailPodcast> {
                 width: 335,
                 margin: const EdgeInsets.only(top: 50),
                 decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
                     image: NetworkImage(widget.podcastModel.imageUrl),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -88,21 +96,58 @@ class _DetailPodcastState extends State<DetailPodcast> {
                       fontWeight: light,
                     ),
                   ),
-                  Slider.adaptive(
-                    min: 0.0,
-                    value: position.inSeconds.toDouble(),
-                    max: duration.inSeconds.toDouble(),
-                    onChanged: (double value) {
-                      setState(() {
-                        audioPlayer.seek(Duration(seconds: value.toInt()));
-                      });
-                    },
+                  const SizedBox(height: 41),
+                  ClipOval(
+                    child: Material(
+                      color: Colors.purple[400], // Button color
+                      child: InkWell(
+                        splashColor: Colors.red, // Splash color
+                        onTap: () {
+                          getAudio(widget.podcastModel.voiceUrl);
+                        },
+                        child: SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: Icon(
+                              playBtn,
+                              color: Colors.white,
+                              size: 40,
+                            )),
+                      ),
+                    ),
                   ),
-                  IconButton(
-                      onPressed: () {
-                        getAudio(widget.podcastModel.voiceUrl);
+                  const SizedBox(height: 40),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Slider.adaptive(
+                      min: 0.0,
+                      thumbColor: Colors.purple[400],
+                      activeColor: Colors.purple[400],
+                      value: position.inSeconds.toDouble(),
+                      max: duration.inSeconds.toDouble(),
+                      onChanged: (double value) {
+                        setState(() {
+                          audioPlayer.seek(Duration(seconds: value.toInt()));
+                        });
                       },
-                      icon: Icon(playBtn))
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(left: 30),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            position != null
+                                ? "${positionText ?? ''}"
+                                : duration != null
+                                    ? durationText
+                                    : '',
+                            // ignore: conflicting_dart_import
+                            style: const TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                  )
                 ],
               ),
             )
