@@ -79,7 +79,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
                 icon: Icon(playBtn)),
           ),
           const SizedBox(
-            width: 8,
+            width: 10,
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12),

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:podcast/models/podcast_model.dart';
 import 'package:podcast/shared/theme.dart';
-
-import 'mini_player.dart';
+import 'package:podcast/widgets/mini_player.dart';
 
 class PodcastCard extends StatefulWidget {
   final PodcastModel _podcastModel;
@@ -118,26 +117,26 @@ class _PodcastCardState extends State<PodcastCard> {
             height: 100,
             width: double.infinity,
             borderRadius: 20,
-            blur: 6,
+            blur: 8,
             alignment: Alignment.bottomCenter,
-            border: 4,
+            border: 1,
             linearGradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFFFFFFFF).withOpacity(0.10),
-                  const Color(0xFFFFFFFF).withOpacity(0.2),
+                  const Color.fromARGB(255, 34, 54, 239).withOpacity(0.10),
+                  const Color.fromARGB(255, 248, 238, 255).withOpacity(0.2),
                 ],
                 stops: const [
                   0.1,
-                  1,
+                  2,
                 ]),
             borderGradient: LinearGradient(
-              begin: Alignment.topLeft,
+              begin: Alignment.topRight,
               end: Alignment.topRight,
               colors: [
                 const Color(0xFFffffff).withOpacity(0.10),
-                const Color((0xFFFFFFFF)).withOpacity(0.4),
+                const Color((0xFFFFFFFF)).withOpacity(0.0),
               ],
             ),
             child: MiniPlayer(podcastModel),

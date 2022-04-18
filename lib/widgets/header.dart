@@ -17,11 +17,11 @@ class HeaderApp extends StatelessWidget {
           'assets/gradient.png',
         ),
       )),
-      margin: const EdgeInsets.only(top: 20),
       child: Center(
         child: Column(
           children: [
             Container(
+              margin: const EdgeInsets.only(top: 30),
               width: 75,
               height: 75,
               decoration: const BoxDecoration(

@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                 backgroundColor: Colors.white,
                 flexibleSpace: const FlexibleSpaceBar(
                   centerTitle: true,
-                  expandedTitleScale: 1.5,
+                  expandedTitleScale: 2,
                   background: HeaderApp(),
                   collapseMode: CollapseMode.parallax,
                 ))
