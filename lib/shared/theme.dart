@@ -3,11 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 double defaultMargin = 20;
 
-Color primaryColor = Color(0x791AAD);
-Color secondaryColor = Color(0xF08A5D);
-Color kBlackColor = Color(0xff1F1449);
-Color kWhiteColor = Color(0xffFFFFFF);
-Color kGreyColor = Color(0xff9698A9);
+Color primaryColor = Colors.purple;
+Color secondaryColor = const Color(0x00f08a5d);
+Color kBlackColor = const Color.fromARGB(255, 0, 0, 0);
+Color kWhiteColor = const Color(0xffFFFFFF);
+Color kGreyColor = const Color(0xff9698A9);
+
+Color darkGreyClr = const Color(0xff121212);
+Color darkHeaderClr = Colors.grey.shade800;
 
 TextStyle blackTextStyle = GoogleFonts.nunito(
   color: kBlackColor,
@@ -28,3 +31,15 @@ FontWeight semiBold = FontWeight.w600;
 FontWeight bold = FontWeight.w700;
 FontWeight extraBold = FontWeight.w800;
 FontWeight black = FontWeight.w900;
+
+class Themes {
+  static final light = ThemeData(
+    primaryColor: Colors.white,
+    brightness: Brightness.light,
+  );
+
+  static final dark = ThemeData(
+    primaryColor: darkGreyClr,
+    brightness: Brightness.dark,
+  );
+}

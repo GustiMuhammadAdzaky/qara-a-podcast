@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:podcast/models/podcast_model.dart';
 
 class ApiProvider {
-  String baseUrl = 'https://api-podcast.000webhostapp.com/PodcastApi';
+  String baseUrl = 'https://podcast-api.000webhostapp.com/PodcastApi';
 
   Future<List<PodcastModel>> fetchdata() async {
     final response = await http.get(Uri.parse(baseUrl));

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:podcast/bloc/podcast_bloc.dart';
 import 'package:podcast/models/podcast_model.dart';
+import 'package:podcast/resources/api_provider.dart';
 
 import 'package:podcast/shared/theme.dart';
 import 'package:podcast/widgets/card_podcast.dart';
@@ -17,23 +18,26 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final PodcastBloc _newsBloc = PodcastBloc();
+  final ApiProvider _refresh = ApiProvider();
+
   @override
   void initState() {
     _newsBloc.add(GetPodcastList());
+    _refresh.fetchdata();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
-                expandedHeight: 230,
+                expandedHeight: 240,
                 floating: true,
                 elevation: 0,
-                forceElevated: true,
                 pinned: true,
                 stretch: true,
                 title: const Text(
@@ -81,14 +85,18 @@ class _HomePageState extends State<HomePage> {
                   } else if (state is PodcasLoading) {
                     return _buildLoading();
                   } else if (state is PodcastSuccess) {
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          terbaruText(),
-                          buildCard(context, state.podcastModel),
-                          semuaEpisodeText(),
-                          buildTile(context, state.podcastModel)
-                        ],
+                    return RefreshIndicator(
+                      onRefresh: () => _refresh.fetchdata(),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                          children: [
+                            terbaruText(),
+                            buildCard(context, state.podcastModel),
+                            semuaEpisodeText(),
+                            buildTile(context, state.podcastModel)
+                          ],
+                        ),
                       ),
                     );
                   } else if (state is PodcastError) {}
@@ -106,15 +114,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildCard(BuildContext context, List<PodcastModel> model) {
-    return Container(
+    return SizedBox(
       height: 230,
-      margin: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 10,
-      ),
       width: double.infinity,
       child: ListView.builder(
-        reverse: true,
         scrollDirection: Axis.horizontal,
         itemCount: model.length,
         itemBuilder: (BuildContext context, int index) {
@@ -164,6 +167,7 @@ Widget buildTile(BuildContext context, List<PodcastModel> podcast) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 12),
     child: ListView.builder(
+      scrollDirection: Axis.vertical,
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       itemCount: podcast.length,

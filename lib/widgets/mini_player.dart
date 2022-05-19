@@ -59,56 +59,61 @@ class _MiniPlayerState extends State<MiniPlayer> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 26),
       color: Colors.transparent,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            height: 62,
-            width: 62,
-            decoration: BoxDecoration(
+      child: Expanded(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 80,
+              width: 80,
+              decoration: BoxDecoration(
                 image: DecorationImage(
                     image: NetworkImage(widget.podcastModel.imageUrl),
                     fit: BoxFit.cover),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey, width: 1)),
-            child: IconButton(
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Flexible(
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.podcastModel.title,
+                      style: blackTextStyle.copyWith(fontWeight: bold),
+                    ),
+                    Text(
+                      widget.podcastModel.category,
+                      style: blackTextStyle.copyWith(fontSize: 10),
+                    ),
+                    Text(
+                        position != null
+                            ? "${positionText ?? ''}"
+                            : duration != null
+                                ? durationText
+                                : '',
+                        // ignore: conflicting_dart_import
+                        style: const TextStyle(fontSize: 6)),
+                  ],
+                ),
+              ),
+            ),
+            Center(
+              child: IconButton(
                 color: Colors.white,
                 onPressed: () {
                   getAudio(widget.podcastModel.voiceUrl);
                 },
-                icon: Icon(playBtn)),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.podcastModel.title,
-                  style: blackTextStyle.copyWith(fontWeight: bold),
-                ),
-                Text(
-                  widget.podcastModel.category,
-                  style: blackTextStyle.copyWith(fontSize: 10),
-                ),
-                const SizedBox(
-                  height: 4,
-                ),
-                Text(
-                    position != null
-                        ? "${positionText ?? ''}"
-                        : duration != null
-                            ? durationText
-                            : '',
-                    // ignore: conflicting_dart_import
-                    style: const TextStyle(fontSize: 6)),
-              ],
-            ),
-          )
-        ],
+                icon: Icon(playBtn),
+                iconSize: 50,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

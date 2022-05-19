@@ -57,27 +57,28 @@ class _DetailPodcastState extends State<DetailPodcast> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Center(
-              child: Container(
-                height: 335,
-                width: 335,
-                margin: const EdgeInsets.only(top: 50),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: NetworkImage(widget.podcastModel.imageUrl),
-                    fit: BoxFit.cover,
-                  ),
+      body: Column(
+        children: [
+          Center(
+            child: Container(
+              height: 335,
+              width: 335,
+              margin: const EdgeInsets.only(top: 50),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: NetworkImage(widget.podcastModel.imageUrl),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-            const SizedBox(
-              height: 48,
-            ),
-            Center(
+          ),
+          const SizedBox(
+            height: 48,
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Center(
               child: Column(
                 children: [
                   Text(
@@ -116,11 +117,12 @@ class _DetailPodcastState extends State<DetailPodcast> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 20),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Slider.adaptive(
                       min: 0.0,
+                      inactiveColor: Colors.grey,
                       thumbColor: Colors.purple[400],
                       activeColor: Colors.purple[400],
                       value: position.inSeconds.toDouble(),
@@ -150,9 +152,9 @@ class _DetailPodcastState extends State<DetailPodcast> {
                   )
                 ],
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

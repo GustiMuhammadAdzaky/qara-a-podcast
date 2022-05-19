@@ -64,7 +64,9 @@ class _PodcastCardState extends State<PodcastCard> {
       child: Container(
         height: 200,
         width: 150,
-        margin: const EdgeInsets.only(right: 12),
+        margin: const EdgeInsets.only(
+          left: 20,
+        ),
         child: Column(
           children: [
             Container(
@@ -78,7 +80,7 @@ class _PodcastCardState extends State<PodcastCard> {
               ),
             ),
             const SizedBox(
-              height: 2,
+              height: 10,
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -114,22 +116,23 @@ class _PodcastCardState extends State<PodcastCard> {
         context: context,
         builder: (BuildContext context) {
           return GlassmorphicContainer(
-            height: 100,
+            constraints: const BoxConstraints(maxHeight: double.infinity),
+            height: 110,
             width: double.infinity,
-            borderRadius: 20,
-            blur: 8,
+            borderRadius: 10,
+            blur: 4,
             alignment: Alignment.bottomCenter,
             border: 1,
             linearGradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color.fromARGB(255, 34, 54, 239).withOpacity(0.10),
-                  const Color.fromARGB(255, 248, 238, 255).withOpacity(0.2),
+                  const Color.fromARGB(31, 154, 170, 255).withOpacity(0.10),
+                  const Color.fromARGB(255, 255, 255, 255).withOpacity(0.9),
                 ],
                 stops: const [
                   0.1,
-                  2,
+                  1,
                 ]),
             borderGradient: LinearGradient(
               begin: Alignment.topRight,
